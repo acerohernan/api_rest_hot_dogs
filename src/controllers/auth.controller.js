@@ -3,7 +3,6 @@ const { findUser, createUser } = require("../services/user.service");
 const { encrypt, compareHash } = require("../utils/encrypt");
 const { signJwt } = require("../utils/jwt");
 const logger = require("../utils/logger");
-const {omit} = require("lodash");
 const config = require("config");
 
 exports.singUpHandler = async(req, res) => {
