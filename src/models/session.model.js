@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../database/connect");
 
-const User = sequelize.define('tbl_users', {
+const Session = sequelize.define('tbl_sessions', {
     id_session:{
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -22,4 +22,4 @@ const User = sequelize.define('tbl_users', {
     freezeTableName: true
 }); 
 
-module.exports = User;
+module.exports = Session;

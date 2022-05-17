@@ -8,5 +8,7 @@ module.exports = {
     dbDialect: process.env.DB_DIALECT,
     tokenPublicKey: process.env.TOKEN_PUBLIC_KEY,
     tokenPrivateKey: process.env.TOKEN_PRIVATE_KEY,
+    accessTokenExpiration: "15m",
+    refreshTokenExpiration: "1y",
     saltWorkFactor: 10,
 };

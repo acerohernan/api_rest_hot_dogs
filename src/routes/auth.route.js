@@ -15,4 +15,10 @@ router.post('/signup', AuthController.singUpHandler);
 // @access  Public
 router.post('/login', AuthController.createSessionHandler);
 
+// @route   POST api/auth/logout
+// @desc    Logout of all devices
+// @access  Public
+router.post('/logout', AuthController.closeSessionHandler);
+
+
 module.exports = router;
