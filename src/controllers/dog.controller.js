@@ -1,5 +1,6 @@
+const dayjs = require("dayjs");
 const { createDog, findDog, findAllDogs, updateDog, deleteDog, findDogByPk } = require("../services/dog.service");
-const { findUser } = require("../services/user.service");
+const { createDogFavorite, findSingleDogFavorite, deleteDogFavorite, findAllDogFavorite } = require("../services/favorite.service");
 const logger = require("../utils/logger");
 
 exports.createDogHandler = async(req, res) => {
@@ -172,6 +173,155 @@ exports.deleteDogHandler = async(req, res) => {
         });
 
     }catch (e){
+        logger.error(e.message || e);
+        res.status(500).json({
+            message: "An error was ocurred",
+            success: false,
+        })
+    };
+};
+
+exports.addDogFavorite = async(req, res) => {
+    try{
+        const {id_dog, id_dog_fav} = req.body;
+        const {id_user} = req.user;
+
+        if(id_dog === id_dog_fav){
+            return res.status(400).json({
+                message: "The dog could not be the same.",
+                success: false
+            })
+        };
+
+        const senderDog = await findDog({id_dog});
+        const favDog = await findDog({id_dog: id_dog_fav});
+        
+        if(!favDog || !senderDog){
+            return res.status(400).json({
+                message: "The dog not exists.",
+                success: false
+            });
+        };
+
+        if(Number(senderDog.dataValues.id_user) !== id_user){
+            return res.status(401).json({
+                message: "The sender dog is not yours.",
+                success: false
+            })
+        };
+
+        const isCreated = await findSingleDogFavorite({id_dog, id_dog_fav});
+
+        if(isCreated){
+            return res.status(401).json({
+                message: "The dog is already your favorite",
+                success: false
+            })
+        };
+
+        const favCreated = await createDogFavorite({id_dog, id_dog_fav, created_date: dayjs().format("YYYY-MM-DDTHH:mm:ss")});
+
+        res.status(200).json({
+            message: "Dog added to favorites successfully",
+            success: true,
+            data: favCreated
+        });
+
+    }catch(e){
+        logger.error(e.message || e);
+        res.status(500).json({
+            message: "An error was ocurred",
+            success: false,
+        })
+    };
+};
+
+exports.deleteDogFavorite = async(req, res) => {
+    try{
+        const {favId} = req.params;
+        const {id_dog} = req.body;
+        const {id_user} = req.user;
+
+        if(id_dog === favId){
+            return res.status(400).json({
+                message: "The dog could not be the same.",
+                success: false
+            })
+        };
+
+        const senderDog = await findDog({id_dog});
+        const favDog = await findDog({id_dog: favId});
+
+        if(!favDog || !senderDog){
+            return res.status(400).json({
+                message: "The dog not exists.",
+                success: false
+            });
+        };
+
+        if(Number(senderDog.dataValues.id_user) !== id_user){
+            return res.status(401).json({
+                message: "The sender dog is not yours.",
+                success: false
+            })
+        };
+
+        const isCreated = await findSingleDogFavorite({id_dog, id_dog_fav: favId});
+
+        if(!isCreated){
+            return res.status(401).json({
+                message: "The dog is not your favorite",
+                success: false
+            })
+        };
+
+        await deleteDogFavorite({id_dog, id_dog_fav: favId});
+
+        res.status(200).json({
+            message: "Dog favorite was deleted successfully.",
+            success: true
+        });
+
+    }catch(e){
+        logger.error(e.message || e);
+        res.status(500).json({
+            message: "An error was ocurred",
+            success: false,
+        })
+    };
+};
+
+exports.getAllDogFavorites = async(req, res) => {
+    try{
+        console.log("Entrando");
+        const {id_dog} = req.body;
+        const {id_user} = req.user;
+
+        const dog = await findDog({id_dog});
+
+        if(!dog){
+            return res.status(400).json({
+                message: "The dog not exists.",
+                success: false
+            });
+        };
+
+        if(Number(dog.dataValues.id_user) !== id_user){
+            return res.status(401).json({
+                message: "The dog is not yours.",
+                success: false
+            })
+        };
+
+        const favorites = await findAllDogFavorite({id_dog});
+
+        res.status(200).json({
+            message: "All dog favorites obtained",
+            success: true,
+            data: favorites
+        });
+
+    }catch(e){
         logger.error(e.message || e);
         res.status(500).json({
             message: "An error was ocurred",

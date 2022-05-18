@@ -1,25 +1,28 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../database/connect");
 
-const Session = sequelize.define('tbl_sessions', {
-    id_session:{
+const Fav = sequelize.define('tbl_favorites', {
+    id_fav:{
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
-    id_user: {
+    id_dog:{
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
+    id_dog_fav: {
         type: Sequelize.INTEGER,
         allowNull: false
     },
-    userAgent: {
-        type: Sequelize.STRING,
-        allowNull: true,
-        default: null
+    created_date: {
+        type: Sequelize.DATE,
+        allowNull: false
     },
 }, {
     timestamps: false,
     freezeTableName: true
 }); 
 
-module.exports = Session;
+module.exports = Fav;

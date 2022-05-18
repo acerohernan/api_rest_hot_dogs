@@ -45,3 +45,38 @@ exports.deleteDogSchema = object({
     ...params
 });
 
+exports.addDogFavoriteSchema = object({
+    body: object({
+        id_dog: number({
+            required_error: "The dog id sender is required",
+            invalid_type_error: "The dog id must be a number"
+        }),
+        id_dog_fav: number({
+            required_error: "The id from the dog to add is required",
+            invalid_type_error: "The dog id must be a number"
+        }),
+    })
+})
+
+exports.deleteDogFavoriteSchema = object({
+    params: object({
+        favId: string({
+            required_error: "Dog favorite id is required"
+        })
+    }),
+    body: object({
+        id_dog: number({
+            required_error: "Dog sender id is required",
+            invalid_type_error: "Dog id sender must be a number"
+        })  
+    })
+})
+
+exports.getDogFavoritesSchema = object({
+    body: object({
+        id_dog: number({
+            required_error: "Dog sender id is required",
+            invalid_type_error: "Dog id sender must be a number"
+        })  
+    })
+})

@@ -9,7 +9,7 @@ const Dog = sequelize.define('tbl_dogs', {
         allowNull: false,
     },
     id_user: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         allowNull: false
     },
     first_name: {
