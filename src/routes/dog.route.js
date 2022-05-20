@@ -36,7 +36,7 @@ router.delete('/:dogId', [authMiddleware, validateSchema(deleteDogSchema)], DogC
 // @route   GET api/dog/fav
 // @desc    Get all the favs of a dog
 // @access  Private
-router.get('/fav/all', [authMiddleware, validateSchema(getDogFavoritesSchema)], DogController.getAllDogFavorites);
+router.post('/fav/all', [authMiddleware, validateSchema(getDogFavoritesSchema)], DogController.getAllDogFavorites);
 
 // @route   POST api/dog/fav/add
 // @desc    Add a fav dog

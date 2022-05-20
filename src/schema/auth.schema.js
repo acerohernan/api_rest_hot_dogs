@@ -1,4 +1,4 @@
-const {object, string} = require("zod");
+const {object, string, number} = require("zod");
 
 exports.createSessionSchema = object({
     body: object({
@@ -33,8 +33,9 @@ exports.signUpSchema = object({
 
 exports.closeSessionSchema = object({
     body: object({
-        userId: string({
-            required_error: "User id is required"
+        userId: number({
+            required_error: "User id is required",
+            invalid_type_error: "User id must be a number"
         })
     })
 });

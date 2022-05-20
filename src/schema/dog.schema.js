@@ -5,13 +5,11 @@ const payload = {
         first_name: string({
             required_error: "First name is required"
         }),
-        age: number({
+        age: string({
             required_error: "Age is required",
-            invalid_type_error: "Age must be a number"
         }),
-        height: number({
+        height: string({
             required_error: "Height is required",
-            invalid_type_error: "Height must be a number"
         }),
         birthday_date: string({
             required_error: "Birthday date is required",

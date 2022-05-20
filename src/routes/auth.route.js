@@ -20,7 +20,7 @@ router.post('/login', validateSchema(createSessionSchema), AuthController.create
 // @route   POST api/auth/logout
 // @desc    Logout of all devices
 // @access  Public
-router.post('/logout',validateSchema(closeSessionSchema), AuthController.closeSessionHandler);
+router.post('/logout', AuthController.closeSessionHandler);
 
 
 module.exports = router;

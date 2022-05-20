@@ -1,9 +1,10 @@
 const { findSession, createSession, deleteSession } = require("../services/session.service");
 const { findUser, createUser } = require("../services/user.service");
 const { encrypt, compareHash } = require("../utils/encrypt");
-const { signJwt } = require("../utils/jwt");
+const { signJwt, verifyJwt } = require("../utils/jwt");
 const logger = require("../utils/logger");
 const config = require("config");
+const { get } = require("lodash");
 
 exports.singUpHandler = async(req, res) => {
     try{
@@ -65,7 +66,7 @@ exports.createSessionHandler = async (req, res) => {
         const validPassword = await compareHash(password, user.password);
 
         if(!validPassword){
-            return res.status(500).json({
+            return res.status(401).json({
             message: "Invalid email or password.",
             success: false
             });
@@ -74,7 +75,7 @@ exports.createSessionHandler = async (req, res) => {
         const isActive = await findSession({id_user: user.id_user});
 
         if(isActive){
-            return res.status(500).json({
+            return res.status(406).json({
             message: "A session in other device is open.",
             success: false,
             data: user.id_user
@@ -114,7 +115,30 @@ exports.createSessionHandler = async (req, res) => {
 
 exports.closeSessionHandler = async (req, res) => {
     try{
-        const {userId} = req.body;
+    let {userId} = req.body;
+
+    if(!userId){
+        const accessToken = get(req, 'headers.authorization', "").replace("Bearer ", "");
+        console.log(accessToken);
+
+        if(!accessToken){
+            return res.status(400).json({
+            message: "Access token is required",
+            success: false
+            })
+        };
+
+        const {decoded} = verifyJwt(accessToken);
+
+        if(!decoded){
+            return res.status(400).json({
+            message: "Unathorized",
+            success: false
+            })
+        };
+
+        userId = decoded.dataValues.id_user;
+    };
 
     const user = await findUser({id_user: userId});
 
